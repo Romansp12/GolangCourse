@@ -23,9 +23,8 @@ func main() {
 
 	if n<1 {
 		fmt.Println("Invalid gorutines count")
+		return
 	}
-
-	fmt.Println("Running gorutines for counting: ",n)
 	
 	res:=make(chan float64,n)
 	var ans float64
@@ -38,7 +37,8 @@ func main() {
 	for i:=0;i<n;i++ {
 		go calculate(i,n,res)
 	}
-
+	fmt.Println("Running gorutines for counting: ",n)
+	
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
 	<-exit
