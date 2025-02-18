@@ -27,6 +27,7 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 				default:
 					x,clse:=<-curChan
 					if !clse{
+						close(res)
 						return
 					}
 					select{
