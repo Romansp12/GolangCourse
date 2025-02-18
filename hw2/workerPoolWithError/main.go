@@ -24,6 +24,7 @@ func Run(tasks []Task, n, m int) error {
 	input:=make(chan Task)
 	resultErr:=make(chan error,1)
 
+	// здесь читаем результаты работы горутин, если ошибок больше чем можно то отменяем контекст
 	go func(){
 		for e :=range outputTask{
 			fmt.Println("receved error",e)
@@ -47,6 +48,7 @@ func Run(tasks []Task, n, m int) error {
 		}
 	}()
 	
+	// запускаем n горутин, которые читают из канала и с приоритетом проверяют канал ctx.Done()
 	for i:=0;i<n;i++{
 		go func(){
 			for{
@@ -69,7 +71,7 @@ func Run(tasks []Task, n, m int) error {
 		}()
 	}
 
-
+	// producer task
 	go func(){
 		for _, task := range tasks {
 			select{
