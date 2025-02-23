@@ -23,6 +23,7 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 			for{
 				select {
 				case <-done:
+					close(res)
 					return
 				default:
 					x,clse:=<-curChan
@@ -32,6 +33,7 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 					}
 					select{
 					case <-done:
+						close(res)
 						return
 					default:
 						res<-x
