@@ -1,0 +1,32 @@
+version: '3.9'
+
+
+services:
+  messenger:
+    container_name: messenger
+    build:
+      context: ./messenger
+      dockerfile: Dockerfile
+    ports:
+      - 50051:50051 # gRPC
+      - 8081:8081 # HTTP
+    network_mode: host
+    environment:
+      DB_CONN: "postgresql://postgres:0000@localhost:5432/postgres"
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: example
+    network_mode: host
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s

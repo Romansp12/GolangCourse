@@ -1,0 +1,1 @@
+~/go/bin/goose postgres "host=localhost port=5432 user=postgres password=example dbname=postgres sslmode=disable" up
