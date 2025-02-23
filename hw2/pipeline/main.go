@@ -26,16 +26,15 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 					close(res)
 					return
 				default:
-					x,clse:=<-curChan
-					if !clse{
-						close(res)
-						return
-					}
 					select{
 					case <-done:
 						close(res)
 						return
-					default:
+					case x,clse:=<-curChan:
+						if !clse{
+							close(res)
+							return
+						}
 						res<-x
 					}
 				}
