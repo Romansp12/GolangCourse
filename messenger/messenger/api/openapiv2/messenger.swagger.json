@@ -16,6 +16,49 @@
     "application/json"
   ],
   "paths": {
+    "/messenger/chats": {
+      "post": {
+        "operationId": "MESSENGER_CreateChat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateChatResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "writable",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "ttl",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "tags": [
+          "MESSENGER"
+        ]
+      }
+    },
     "/messenger/init-session": {
       "post": {
         "operationId": "MESSENGER_InitSession",
@@ -37,9 +80,105 @@
           "MESSENGER"
         ]
       }
+    },
+    "/messenger/msg": {
+      "get": {
+        "operationId": "MESSENGER_GetMessagesFromChat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetMessagesFromChatResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MESSENGER"
+        ]
+      },
+      "post": {
+        "operationId": "MESSENGER_SendMessageToChat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "msg",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MESSENGER"
+        ]
+      }
     }
   },
   "definitions": {
+    "CreateChatResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "GetMessagesFromChatResp": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/GetMessagesFromChatRespItem"
+          }
+        }
+      }
+    },
+    "GetMessagesFromChatRespItem": {
+      "type": "object",
+      "properties": {
+        "usr": {
+          "type": "string"
+        },
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
     "InitSessionResp": {
       "type": "object",
       "properties": {

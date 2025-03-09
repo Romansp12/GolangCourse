@@ -5,10 +5,39 @@ option go_package = "messenger/pkg/api/messenger/v1;messenger";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
 
 message InitSessionResp{
     string id=1;
 }
+
+message CreateChatReq{
+    string id=1;
+    bool writable=2;
+    google.protobuf.Timestamp ttl = 3;
+}
+
+message CreateChatResp{
+    string id=1;
+}
+
+message SendMessageToChatReq{
+    string id=1;
+    string msg=2;
+}
+
+message GetMessagesFromChatReq{
+    string id=1;
+}
+
+message GetMessagesFromChatResp{
+    message Item{
+        string usr=1;
+        string msg=2;
+    }
+    repeated Item items=1;
+}
+
 
 service MESSENGER {
   rpc InitSession(google.protobuf.Empty) returns (InitSessionResp){
@@ -16,4 +45,22 @@ service MESSENGER {
       post: "/messenger/init-session"
     };
   }
+
+  rpc CreateChat(CreateChatReq) returns (CreateChatResp){
+    option (google.api.http) = {
+      post: "/messenger/chats"
+    };
+  }
+
+  rpc SendMessageToChat(SendMessageToChatReq) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/messenger/msg"
+    };
+  }
+
+    rpc GetMessagesFromChat(GetMessagesFromChatReq) returns (GetMessagesFromChatResp){
+    option (google.api.http) = {
+        get: "/messenger/msg"
+    };
+    }
 }
