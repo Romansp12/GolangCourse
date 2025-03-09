@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "messenger/pkg/api/messenger/v1;messenger";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+message InitSessionResp{
+    string id=1;
+}
+
+service MESSENGER {
+  rpc InitSession() returns (InitSessionResp){
+    option (google.api.http) = {
+      post: "/messenger/init-session"
+    };
+  }
+}
